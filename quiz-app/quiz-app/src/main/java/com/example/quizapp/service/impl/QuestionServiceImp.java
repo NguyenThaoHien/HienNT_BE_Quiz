@@ -7,6 +7,7 @@ import com.example.quizapp.mapper.QuestionMapper;
 import com.example.quizapp.mapper.UserMapper;
 import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.service.QuestionService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,21 +32,28 @@ public class QuestionServiceImp implements QuestionService {
 
     @Override
     public Page<QuestionResponse> getAll(Pageable pageable) {
-        return null;
+        Page<Question> page = questionRepository.findAllByActiveTrue(pageable);
+        return page.map(questionMapper::toResponse);
     }
 
     @Override
     public QuestionResponse getById(UUID id) {
-        return null;
+        Question question = questionRepository.findByIdAndActiveTrue(id).orElseThrow(() -> new EntityNotFoundException("Question not found"));
+        return questionMapper.toResponse(question);
     }
 
     @Override
-    public void update(UUID id, QuestionRequest request) {
-
+    public QuestionResponse update(UUID id, QuestionRequest request) {
+        Question update = questionMapper.toEntity(request);
+        update.setId(id);
+        Question saved = questionRepository.save(update);
+        return questionMapper.toResponse(saved);
     }
 
     @Override
     public void delete(UUID id) {
-
+        Question question = questionRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Question not found"));
+        question.setActive(false);
+        questionRepository.save(question);
     }
 }

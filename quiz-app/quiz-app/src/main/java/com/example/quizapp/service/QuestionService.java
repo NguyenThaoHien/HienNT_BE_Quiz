@@ -15,7 +15,7 @@ public interface QuestionService {
 
     QuestionResponse getById(UUID id);
 
-    void update(UUID id, QuestionRequest request);
+    QuestionResponse update(UUID id, QuestionRequest request);
 
     void delete(UUID id);
 }
