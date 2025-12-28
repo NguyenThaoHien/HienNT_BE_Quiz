@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface QuestionService {
 
-    UUID create(QuestionRequest request);
+    QuestionResponse create(QuestionRequest request);
 
     Page<QuestionResponse> getAll(Pageable pageable);
 
