@@ -72,9 +72,9 @@ public class AuthServiceImp implements AuthService {
             throw ResourceAlreadyExistsException.usernameExists(registerRequest.email());
         }
 
-        Role defaultRole = roleRepository.findByName(Constants.ROLE_REPORTER)
+        Role defaultRole = roleRepository.findByName(Constants.ROLE_USER)
                 .orElseThrow(() -> {
-                    return ResourceNotFoundException.roleNotFound(Constants.ROLE_REPORTER);
+                    return ResourceNotFoundException.roleNotFound(Constants.ROLE_USER);
                 });
 
         // Create new user

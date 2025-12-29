@@ -2,6 +2,8 @@ package com.example.quizapp.exception;
 
 import org.springframework.http.HttpStatus;
 
+import java.util.UUID;
+
 public class ResourceNotFoundException extends BaseException {
 
     private static final String DEFAULT_ERROR_CODE = "NOT_FOUND_001";
@@ -34,11 +36,11 @@ public class ResourceNotFoundException extends BaseException {
         return new ResourceNotFoundException("User", "id", id);
     }
 
-    public static ResourceNotFoundException categoryNotFound(Long id) {
-        return new ResourceNotFoundException("Category", "id", id);
+    public static ResourceNotFoundException questionNotFound(UUID id) {
+        return new ResourceNotFoundException("Question", "id", id);
     }
 
-    public static ResourceNotFoundException newsNotFound(Long id) {
-        return new ResourceNotFoundException("News", "id", id);
+    public static ResourceNotFoundException quizNotFound(UUID id) {
+        return new ResourceNotFoundException("Quiz", "id", id);
     }
 }

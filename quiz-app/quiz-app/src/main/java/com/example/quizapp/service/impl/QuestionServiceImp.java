@@ -3,6 +3,7 @@ package com.example.quizapp.service.impl;
 import com.example.quizapp.dto.request.QuestionRequest;
 import com.example.quizapp.dto.response.QuestionResponse;
 import com.example.quizapp.entity.Question;
+import com.example.quizapp.exception.ResourceNotFoundException;
 import com.example.quizapp.mapper.QuestionMapper;
 import com.example.quizapp.mapper.UserMapper;
 import com.example.quizapp.repository.QuestionRepository;
@@ -44,9 +45,10 @@ public class QuestionServiceImp implements QuestionService {
 
     @Override
     public QuestionResponse update(UUID id, QuestionRequest request) {
-        Question update = questionMapper.toEntity(request);
-        update.setId(id);
-        Question saved = questionRepository.save(update);
+        Question existing = questionRepository.findById(id).orElseThrow(() -> ResourceNotFoundException.questionNotFound(id));
+        questionMapper.updateEntity(existing, request);
+
+        Question saved = questionRepository.save(existing);
         return questionMapper.toResponse(saved);
     }
 

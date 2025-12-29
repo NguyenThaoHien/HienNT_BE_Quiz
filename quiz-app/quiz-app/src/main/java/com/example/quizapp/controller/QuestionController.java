@@ -40,7 +40,6 @@ public class QuestionController {
     public ResponseEntity<ApiResponse<QuestionResponse>> createNewQuestion(
             @Valid @RequestBody QuestionRequest request
             ){
-        // todo: authentication
         QuestionResponse response = questionService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(response, "Question created successfully"));
     }
