@@ -10,6 +10,7 @@ import com.example.quizapp.repository.QuestionRepository;
 import com.example.quizapp.service.QuestionService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 @Service
 @Transactional
-@RequiredArgsConstructor
+
 public class QuestionServiceImp implements QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionMapper questionMapper;
+    @Autowired
+    public QuestionServiceImp(QuestionRepository questionRepository, QuestionMapper questionMapper) {
+        this.questionRepository = questionRepository;
+        this.questionMapper = questionMapper;
+    }
 
     @Override
     public QuestionResponse create(QuestionRequest request) {

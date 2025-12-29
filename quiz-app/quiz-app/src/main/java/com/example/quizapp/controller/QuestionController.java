@@ -23,11 +23,15 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/question")
-@RequiredArgsConstructor
+
 public class QuestionController {
 
-    @Autowired
+
     private final QuestionService questionService;
+    @Autowired
+    public QuestionController(QuestionService questionService) {
+        this.questionService = questionService;
+    }
 
     @PostMapping
     @ApiResponses(value = {
@@ -57,7 +61,6 @@ public class QuestionController {
             Pageable pageable
     ){
         Page<QuestionResponse> listQuestion = questionService.getAll(pageable);
-
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(listQuestion, "Get all question successfully"));
     }
 

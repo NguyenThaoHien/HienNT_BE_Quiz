@@ -4,11 +4,12 @@ import com.example.quizapp.entity.enums.QuestionType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public record QuestionRequest(
-        @NotBlank String content,
+        @NotBlank @NotNull String content,
         QuestionType type,
         @Min(1) Integer score,
         List<@Valid AnswerRequest> answers
