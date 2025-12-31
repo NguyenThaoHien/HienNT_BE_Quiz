@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "quiz_submissions")
@@ -16,7 +17,7 @@ public class QuizSubmission extends BaseEntity {
     private Double score;
 
     @Column(nullable = false)
-    private Timestamp submissionTime;
+    private LocalDateTime submissionTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
