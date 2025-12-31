@@ -26,4 +26,5 @@ public class QuizSubmission extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
+
 }

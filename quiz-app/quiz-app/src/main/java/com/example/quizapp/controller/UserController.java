@@ -8,6 +8,7 @@ import com.example.quizapp.dto.response.QuizResponse;
 import com.example.quizapp.dto.response.UserResponse;
 import com.example.quizapp.service.QuizzService;
 import com.example.quizapp.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,12 +31,14 @@ import java.util.UUID;
 @Transactional
 public class UserController {
     private final UserService userService;
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping
+    @Operation(summary = "Update user information", description = "Update user's fullName")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "User updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
@@ -45,13 +48,14 @@ public class UserController {
     })
     public ResponseEntity<ApiResponse<UserResponse>> updateUser(
             @Valid @RequestBody UserRequest request
-    ){
-       UserResponse userResponse = userService.update(request);
+    ) {
+        UserResponse userResponse = userService.update(request);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(userResponse, "User updated successfully"));
     }
 
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete user", description = "Soft delete user, change status to inactive")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Delete quizz successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
@@ -59,12 +63,13 @@ public class UserController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden - Requires USER or ADMIN role", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quizz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
-    public ResponseEntity<ApiResponse<String>> delete(@PathVariable String id){
+    public ResponseEntity<ApiResponse<String>> delete(@PathVariable String id) {
         userService.delete(UUID.fromString(id));
         return ResponseEntity.ok(ApiResponse.success(id, "Delete user successfully"));
     }
 
     @GetMapping()
+    @Operation(summary = "Get list of user", description = "Get user list with pageable")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Get question list successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
@@ -75,12 +80,13 @@ public class UserController {
     public ResponseEntity<ApiResponse<Page<UserResponse>>> getListUser(
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)
             Pageable pageable
-    ){
+    ) {
         Page<UserResponse> listUser = userService.getAll(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(listUser, "Get all user successfully"));
     }
 
     @GetMapping("/search/{name}")
+    @Operation(summary = "Get list of user with keyword", description = "Get user list with pageable and keyword")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Get question list successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
@@ -89,11 +95,11 @@ public class UserController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Question not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
     public ResponseEntity<ApiResponse<Page<UserResponse>>> searchUser(
-           @PathVariable String name,
-             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)
-                     Pageable pageable
-    ){
-        Page<UserResponse> listUser = userService.search(name,pageable);
+            @PathVariable String name,
+            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)
+            Pageable pageable
+    ) {
+        Page<UserResponse> listUser = userService.search(name, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(listUser, "Get all user successfully"));
     }
 }

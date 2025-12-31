@@ -2,6 +2,7 @@ package com.example.quizapp.config.security;
 
 import com.example.quizapp.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +28,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final TokenService tokenService;
@@ -45,7 +45,14 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/api-docs/**",
             "/v3/api-docs/**",
+            "/actuator/**"
     };
+
+    @Autowired
+    public SecurityConfig(TokenService tokenService, UserDetailsService userDetailsService) {
+        this.tokenService = tokenService;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

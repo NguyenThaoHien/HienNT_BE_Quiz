@@ -16,9 +16,7 @@ public class Quiz extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-
     private String description;
-
 
     @Column(nullable = false)
     private Integer durationMinutes;

@@ -11,7 +11,6 @@ import lombok.Setter;
 @Getter @Setter
 public class Answer extends BaseEntity {
 
-
     @Column(nullable = false)
     private String content;
 

@@ -17,18 +17,20 @@ import com.example.quizapp.service.AuthService;
 import com.example.quizapp.service.TokenService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class AuthServiceImp implements AuthService {
-
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
@@ -47,7 +49,7 @@ public class AuthServiceImp implements AuthService {
                             loginRequest.getPassword()
                     )
             );
-        }catch (BadCredentialsException e) {
+        } catch (BadCredentialsException e) {
             throw AuthenticationException.invalidCredentials();
         } catch (DisabledException e) {
             throw AuthenticationException.accountDisabled();
@@ -56,6 +58,7 @@ public class AuthServiceImp implements AuthService {
         }
 
         User user = userRepository.findByEmailAndActiveTrue(loginRequest.getEmail()).orElseThrow(AuthenticationException::userNotFound);
+        log.info("User {} log in successfully", loginRequest.getEmail());
         return buildLoginResponse(user);
     }
 
@@ -87,6 +90,7 @@ public class AuthServiceImp implements AuthService {
 
         User savedUser = userRepository.save(newUser);
 
+        log.info("User {} log in successfully", registerRequest.email());
         return buildLoginResponse(savedUser);
     }
 

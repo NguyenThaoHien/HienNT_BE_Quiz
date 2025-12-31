@@ -13,5 +13,5 @@ public interface UserService {
     UserResponse update(UserRequest userRequest);
     void delete(UUID id);
     Page<UserResponse> getAll(Pageable pageable);
-Page<UserResponse> search(String name, Pageable pageable);
+    Page<UserResponse> search(String name, Pageable pageable);
 }

@@ -6,6 +6,7 @@ import com.example.quizapp.dto.request.QuizRequest;
 import com.example.quizapp.dto.request.QuizSubmitRequest;
 import com.example.quizapp.dto.response.*;
 import com.example.quizapp.service.QuizzService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,88 +36,93 @@ public class QuizzController {
     }
 
     @PostMapping
+    @Operation(summary = "Create new quiz", description = "Create a quiz with empty question list")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Quizz updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Quiz updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized - JWT token missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden - Requires USER or ADMIN role", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quizz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quiz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
-    public ResponseEntity<ApiResponse<QuizResponse>> createNewQuestion(
+    public ResponseEntity<ApiResponse<QuizResponse>> createNewQuiz(
             @Valid @RequestBody QuizRequest request
-    ){
+    ) {
         QuizResponse response = quizzService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(response, "Quizz created successfully"));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a quiz", description = "Delete a quiz with it all question list")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Delete quizz successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Delete quiz successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized - JWT token missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden - Requires USER or ADMIN role", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quizz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quiz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
-    public ResponseEntity<ApiResponse<String>> delete(@PathVariable String id){
+    public ResponseEntity<ApiResponse<String>> delete(@PathVariable String id) {
         quizzService.delete(UUID.fromString(id));
-        return ResponseEntity.ok(ApiResponse.success(id, "Delete quizz successfully"));
+        return ResponseEntity.ok(ApiResponse.success(id, "Delete quiz successfully"));
     }
 
     @PostMapping("/{id}")
+    @Operation(summary = "Add question to a quiz", description = "Add list of question to a quiz")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Quizz updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Quiz updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized - JWT token missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden - Requires USER or ADMIN role", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quizz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quiz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
-    public ResponseEntity<ApiResponse<String>> addQuestionToQuizz (
+    public ResponseEntity<ApiResponse<String>> addQuestionToQuiz(
             @PathVariable String id,
             @RequestBody List<UUID> questionID
-            ){
-            quizzService.addQuestionToQuizz(UUID.fromString(id),questionID);
+    ) {
+        quizzService.addQuestionToQuizz(UUID.fromString(id), questionID);
         return ResponseEntity.ok(ApiResponse.success(id, "Quizz update successfully"));
     }
 
     @PostMapping("/update/{id}")
+    @Operation(summary = "Update a quiz content", description = "Update quiz information ( title, score, ...)")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Quizz updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Quiz updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized - JWT token missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden - Requires USER or ADMIN role", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quizz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quiz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
-    public ResponseEntity<ApiResponse<QuizResponse>> updateQuizz (
+    public ResponseEntity<ApiResponse<QuizResponse>> updateQuiz(
             @PathVariable String id,
             @RequestBody QuizRequest quizRequest
-    ){
-        QuizResponse quizResponse= quizzService.update(quizRequest, UUID.fromString(id));
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(quizResponse,"Quiz update sucessful"));
+    ) {
+        QuizResponse quizResponse = quizzService.update(quizRequest, UUID.fromString(id));
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(quizResponse, "Quiz update successfully"));
     }
 
     @PostMapping("/submit")
+    @Operation(summary = "Submit quiz answer", description = "Submit quiz to get score")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Quizz updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Quiz updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized - JWT token missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden - Requires USER or ADMIN role", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quizz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quiz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
-    public ResponseEntity<ApiResponse<QuizSubmitRespone>> submitQuiz (
-
+    public ResponseEntity<ApiResponse<QuizSubmitRespone>> submitQuiz(
             @RequestBody QuizSubmitRequest quizSubmitRequest
-    ){
-        QuizSubmitRespone quizSubmitRespone= quizzService.submit(quizSubmitRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(quizSubmitRespone,"Quiz submit sucessful"));
+    ) {
+        QuizSubmitRespone quizSubmitRespone = quizzService.submit(quizSubmitRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(quizSubmitRespone, "Quiz submit successfully"));
     }
 
     @GetMapping()
+    @Operation(summary = "Search quiz", description = "Search quiz with pageable")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Get question list successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Get quiz list successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized - JWT token missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden - Requires USER or ADMIN role", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Question not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quiz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
     public ResponseEntity<ApiResponse<Page<QuizResponse>>> getListQuiz(
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)

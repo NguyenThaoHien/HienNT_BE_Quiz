@@ -11,8 +11,6 @@ import lombok.Setter;
 @Table(name = "roles")
 @Getter @Setter
 public class Role extends BaseEntity {
-
-
     @Column(nullable = false, unique = true)
     private String name; // ROLE_USER, ROLE_ADMIN
 }

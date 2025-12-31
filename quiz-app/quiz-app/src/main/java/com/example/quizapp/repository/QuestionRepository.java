@@ -12,11 +12,8 @@ import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, UUID> {
-
     Page<Question> findAllByActiveTrue(Pageable pageable);
     List<Question> findAllByIdInAndActiveTrue(List<UUID> ids);
     Optional<Question> findByIdAndActiveTrue(UUID id);
-
-
 }
 

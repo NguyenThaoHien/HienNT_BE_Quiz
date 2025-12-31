@@ -22,7 +22,6 @@ public class Question extends BaseEntity {
     @Column(nullable = false)
     private QuestionType type;
 
-
     @Column(nullable = false)
     private Integer score;
 

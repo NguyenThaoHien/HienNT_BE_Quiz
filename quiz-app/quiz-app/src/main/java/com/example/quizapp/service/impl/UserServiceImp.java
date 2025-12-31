@@ -9,36 +9,42 @@ import com.example.quizapp.repository.UserRepository;
 import com.example.quizapp.service.UserService;
 import com.example.quizapp.specifications.UserSpecification;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
+@Service
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-@Autowired
+
+    @Autowired
     public UserServiceImp(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
-    this.userMapper = userMapper;
-}
+        this.userMapper = userMapper;
+    }
 
     @Override
     public UserResponse update(UserRequest userRequest) {
-        User user = userRepository.findByEmailAndActiveTrue(userRequest.email()).orElseThrow(()->new EntityNotFoundException("User not found"));
-user.setFullName(userRequest.fullName());
-User newUser = userRepository.save(user);
-return userMapper.toResponse(newUser);
+        User user = userRepository.findByEmailAndActiveTrue(userRequest.email()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setFullName(userRequest.fullName());
+        User newUser = userRepository.save(user);
+        return userMapper.toResponse(newUser);
 
     }
 
     @Override
     public void delete(UUID id) {
-        User user = userRepository.findByIdAndActiveTrue(id).orElseThrow(()->new EntityNotFoundException("User not found"));
+        User user = userRepository.findByIdAndActiveTrue(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
         user.setActive(false);
+        log.info("User with email {} deleted successfully", user.getEmail());
         userRepository.save(user);
     }
 
@@ -52,7 +58,7 @@ return userMapper.toResponse(newUser);
     public Page<UserResponse> search(String name, Pageable pageable) {
         Specification<User> spec = Specification
                 .where(UserSpecification.hasFullName(name));
-        Page<User> page = userRepository.findAll(spec,pageable);
+        Page<User> page = userRepository.findAll(spec, pageable);
         return page.map(userMapper::toResponse);
     }
 }

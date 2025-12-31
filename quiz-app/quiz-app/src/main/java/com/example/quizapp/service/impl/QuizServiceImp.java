@@ -26,21 +26,21 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-
 public class QuizServiceImp implements QuizzService {
-private final QuizRepository quizRepository;
-private final QuestionRepository questionRepository;
-private final QuizMapper quizMapper;
-private final UserRepository userRepository;
-private final QuizSubmissionRepository quizSubmissionRepository;
-@Autowired
+    private final QuizRepository quizRepository;
+    private final QuestionRepository questionRepository;
+    private final QuizMapper quizMapper;
+    private final UserRepository userRepository;
+    private final QuizSubmissionRepository quizSubmissionRepository;
+
+    @Autowired
     public QuizServiceImp(QuizRepository quizRepository, QuestionRepository questionRepository, QuizMapper quizMapper, UserRepository userRepository, QuizSubmissionRepository quizSubmissionRepository) {
         this.quizRepository = quizRepository;
-    this.questionRepository = questionRepository;
-    this.quizMapper = quizMapper;
-    this.userRepository = userRepository;
-    this.quizSubmissionRepository = quizSubmissionRepository;
-}
+        this.questionRepository = questionRepository;
+        this.quizMapper = quizMapper;
+        this.userRepository = userRepository;
+        this.quizSubmissionRepository = quizSubmissionRepository;
+    }
 
     @Override
     public QuizResponse create(QuizRequest quizRequest) {
@@ -51,15 +51,15 @@ private final QuizSubmissionRepository quizSubmissionRepository;
 
     @Override
     public void delete(UUID uuid) {
-    Quiz quiz = quizRepository.findByIdAndActiveTrue(uuid).orElseThrow(()->new EntityNotFoundException("Quizz not found"));
-    quiz.setActive(false);
-    quizRepository.save(quiz);
+        Quiz quiz = quizRepository.findByIdAndActiveTrue(uuid).orElseThrow(() -> new EntityNotFoundException("Quizz not found"));
+        quiz.setActive(false);
+        quizRepository.save(quiz);
 
     }
 
     @Override
     public void addQuestionToQuizz(UUID quizzID, List<UUID> questions) {
-        Quiz quiz = quizRepository.findByIdAndActiveTrue(quizzID).orElseThrow(()->new EntityNotFoundException("Quizz not found"));
+        Quiz quiz = quizRepository.findByIdAndActiveTrue(quizzID).orElseThrow(() -> new EntityNotFoundException("Quizz not found"));
         List<Question> questionList = questionRepository.findAllByIdInAndActiveTrue(questions);
         quiz.setQuestions(questionList);
         quizRepository.save(quiz);
@@ -67,10 +67,10 @@ private final QuizSubmissionRepository quizSubmissionRepository;
 
     @Override
     public QuizResponse update(QuizRequest quizRequest, UUID uuid) {
-Quiz quiz  = quizRepository.findByIdAndActiveTrue(uuid).orElseThrow(()->new EntityNotFoundException("Quiz not found"));
-quizMapper.updateEntity(quiz,quizRequest);
-Quiz newQuiz = quizRepository.save(quiz);
-return quizMapper.toResponse(newQuiz);
+        Quiz quiz = quizRepository.findByIdAndActiveTrue(uuid).orElseThrow(() -> new EntityNotFoundException("Quiz not found"));
+        quizMapper.updateEntity(quiz, quizRequest);
+        Quiz newQuiz = quizRepository.save(quiz);
+        return quizMapper.toResponse(newQuiz);
     }
 
     @Override
@@ -121,7 +121,7 @@ return quizMapper.toResponse(newQuiz);
             }
         }
 
-        double passPercentage=50;
+        double passPercentage = 50;
         boolean passed = (achievedScore / totalScore) * 100.0 >= passPercentage;
 
         QuizSubmission submission = new QuizSubmission();
@@ -130,7 +130,6 @@ return quizMapper.toResponse(newQuiz);
         submission.setScore(achievedScore);
         submission.setSubmissionTime(LocalDateTime.now());
         submission = quizSubmissionRepository.save(submission);
-
 
 
         return new QuizSubmitRespone(

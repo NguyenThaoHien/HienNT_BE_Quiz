@@ -17,6 +17,4 @@ public interface QuizzService {
     QuizResponse update(QuizRequest quizRequest, UUID uuid);
     Page<QuizResponse> getAll(Pageable pageable);
     QuizSubmitRespone submit(QuizSubmitRequest quizSubmitRequest);
-
-
 }

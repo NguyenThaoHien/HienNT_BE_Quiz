@@ -7,6 +7,5 @@ import java.util.Set;
 
 public interface TokenService {
     String generateToken(User user, Set<String> roles);
-
     Authentication getAuthenticationFromToken(String token);
 }

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class TokenServiceImp implements TokenService {
 
     @Value("${jwt.secret}")
@@ -47,7 +49,7 @@ public class TokenServiceImp implements TokenService {
 
     @Override
     public Authentication getAuthenticationFromToken(String token) {
-        if(token == null || token.isBlank()) return null;
+        if (token == null || token.isBlank()) return null;
 
         try {
             Claims claims = Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
@@ -71,7 +73,7 @@ public class TokenServiceImp implements TokenService {
         }
     }
 
-    private SecretKey getSigningKey(){
+    private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 }
