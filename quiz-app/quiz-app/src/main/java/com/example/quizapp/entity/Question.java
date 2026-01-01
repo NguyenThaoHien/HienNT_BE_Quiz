@@ -26,8 +26,12 @@ public class Question extends BaseEntity {
     private Integer score;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "quiz_id")
-    private Quiz quiz;
+    @JoinTable(
+            name = "quiz_question",
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "quiz_id")
+    )
+    private List<Quiz> quizzes;
 
     @OneToMany(
             mappedBy = "question",
@@ -36,3 +40,4 @@ public class Question extends BaseEntity {
     )
     private List<Answer> answers;
 }
+

@@ -7,7 +7,10 @@ import org.mapstruct.Mapping;
 
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        imports = Collectors.class
+)
 public interface UserMapper {
 
     @Mapping(

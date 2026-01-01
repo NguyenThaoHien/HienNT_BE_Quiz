@@ -78,7 +78,7 @@ public class UserController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Question not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
     public ResponseEntity<ApiResponse<Page<UserResponse>>> getListUser(
-            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC)
+            @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
         Page<UserResponse> listUser = userService.getAll(pageable);

@@ -21,6 +21,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @EntityGraph(attributePaths = {"roles"})
     Page<User> findAll(Specification<User> spec, Pageable pageable);
     boolean existsByEmail(String email);
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.username = :username")
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email")
     Optional<User> findByUsername(@Param("username") String username);
 }

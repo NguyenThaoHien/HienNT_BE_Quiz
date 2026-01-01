@@ -21,11 +21,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("Loading user by username: {}", username);
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmailAndActiveTrue(username)
                 .orElseThrow(() -> {
                     log.warn("User not found: {}", username);
                     return new UsernameNotFoundException("User not found: " + username);
                 });
+        boolean active = Boolean.TRUE.equals(user.getActive());
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
@@ -34,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .map(role -> new SimpleGrantedAuthority(role.getName()))
                         .toList())
                 .accountExpired(false)
-                .accountLocked(user.getActive() == false)
+                .accountLocked(!active)
                 .credentialsExpired(false)
                 .disabled(user.getActive() != true)
                 .build();

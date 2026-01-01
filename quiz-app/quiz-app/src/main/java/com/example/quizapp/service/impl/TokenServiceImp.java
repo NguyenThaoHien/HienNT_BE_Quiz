@@ -38,8 +38,8 @@ public class TokenServiceImp implements TokenService {
         SecretKey key = getSigningKey();
         return Jwts.builder()
                 .subject(user.getId().toString())
-                .claim("username", user.getFullName())
-                .claim("email", roles)
+                .claim("username", user.getEmail())
+                .claim("roles", roles)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(key)

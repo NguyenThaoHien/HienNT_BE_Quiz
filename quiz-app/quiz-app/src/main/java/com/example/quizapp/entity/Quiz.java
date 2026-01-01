@@ -10,7 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "quizzes")
-@Getter @Setter
+@Getter
+@Setter
 public class Quiz extends BaseEntity {
 
     @Column(nullable = false)
@@ -21,10 +22,7 @@ public class Quiz extends BaseEntity {
     @Column(nullable = false)
     private Integer durationMinutes;
 
-    @OneToMany(
-            mappedBy = "quiz",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @ManyToMany(mappedBy = "quizzes")
     private List<Question> questions;
 }
+

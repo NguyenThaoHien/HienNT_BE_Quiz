@@ -17,6 +17,6 @@ public interface QuestionMapper {
     QuestionResponse toResponse(Question entity);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "quiz", ignore = true)
+    @Mapping(target = "quizzes", ignore = true)
     void updateEntity(@org.mapstruct.MappingTarget Question question, QuestionRequest dto);
 }

@@ -66,7 +66,7 @@ public class AuthServiceImp implements AuthService {
     public LoginResponse register(RegisterRequest registerRequest) {
 
         // Check if password as same as confirm password
-        if (registerRequest.password().equals(registerRequest.confirmPassword())) {
+        if (!registerRequest.password().equals(registerRequest.confirmPassword())) {
             throw BadRequestException.invalidRequest(registerRequest.confirmPassword());
         }
 

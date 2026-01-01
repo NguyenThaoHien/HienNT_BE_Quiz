@@ -13,5 +13,5 @@ Quiz toEntity(QuizRequest quizRequest);
     QuizResponse toResponse(Quiz quiz);
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "questions", ignore = true)
-    Void updateEntity(@org.mapstruct.MappingTarget Quiz quiz, QuizRequest quizRequest);
+    void updateEntity(@org.mapstruct.MappingTarget Quiz quiz, QuizRequest quizRequest);
 }

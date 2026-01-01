@@ -35,6 +35,11 @@ public class QuestionServiceImp implements QuestionService {
     @Override
     public QuestionResponse create(QuestionRequest request) {
         Question question = questionMapper.toEntity(request);
+        if (question.getAnswers() != null) {
+            question.getAnswers().forEach(answer -> {
+                answer.setQuestion(question);
+            });
+        }
         Question newsq = questionRepository.save(question);
         return questionMapper.toResponse(newsq);
     }
