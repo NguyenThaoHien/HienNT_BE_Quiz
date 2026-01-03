@@ -1,0 +1,19 @@
+# ===== Git =====
+.git
+.gitignore
+
+# ===== IDE =====
+.idea
+.vscode
+*.iml
+
+*.log
+logs/
+
+.DS_Store
+Thumbs.db
+
+target/*
+!target/*.jar
+
+surefire-reports/
