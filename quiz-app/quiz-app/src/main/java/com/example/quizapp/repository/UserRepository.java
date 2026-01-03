@@ -15,7 +15,6 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     @EntityGraph(attributePaths = "roles")
     Optional<User> findByEmailAndActiveTrue(String email);
-    @EntityGraph(attributePaths = "roles")
     Optional<User> findByIdAndActiveTrue(UUID id);
     Page<User> findAllByActiveTrue(Pageable pageable);
     @EntityGraph(attributePaths = {"roles"})

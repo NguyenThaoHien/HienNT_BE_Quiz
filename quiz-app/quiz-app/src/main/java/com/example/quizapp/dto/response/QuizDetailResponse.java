@@ -2,9 +2,12 @@ package com.example.quizapp.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.List;
 import java.util.UUID;
 
-public record QuizResponse(
+@Schema(description = "Quiz response DTO")
+public record QuizDetailResponse(
+
         @Schema(
                 description = "Unique identifier of the quiz",
                 example = "c1b2d3e4-f5a6-7890-b123-456789abcdef",
@@ -35,5 +38,12 @@ public record QuizResponse(
                 minimum = "1",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        Integer durationMinutes
+        Integer durationMinutes,
+
+        @Schema(
+                description = "List of questions included in the quiz",
+                requiredMode = Schema.RequiredMode.NOT_REQUIRED
+        )
+        List<QuestionResponse> questions
+
 ) {}

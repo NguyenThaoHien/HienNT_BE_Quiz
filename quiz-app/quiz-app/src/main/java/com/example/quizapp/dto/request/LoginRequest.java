@@ -12,10 +12,10 @@ import lombok.*;
 public class LoginRequest {
     @NotBlank
     @Email
-    @Schema(description = "Email", example = "example@gmail.com", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Email", example = "abx@example.com", requiredMode = Schema.RequiredMode.REQUIRED)
     private String email;
 
     @NotBlank
-    @Schema(description = "Password", example = "@1234", minLength = 8, requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Password", example = "55555555", minLength = 8, requiredMode = Schema.RequiredMode.REQUIRED)
     private String password;
 }

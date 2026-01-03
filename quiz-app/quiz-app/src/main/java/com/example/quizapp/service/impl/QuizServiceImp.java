@@ -2,6 +2,7 @@ package com.example.quizapp.service.impl;
 
 import com.example.quizapp.dto.request.QuizRequest;
 import com.example.quizapp.dto.request.QuizSubmitRequest;
+import com.example.quizapp.dto.response.QuizDetailResponse;
 import com.example.quizapp.dto.response.QuizResponse;
 import com.example.quizapp.dto.response.QuizSubmitRespone;
 import com.example.quizapp.entity.*;
@@ -43,7 +44,7 @@ public class QuizServiceImp implements QuizzService {
     }
 
     @Override
-    public QuizResponse create(QuizRequest quizRequest) {
+    public QuizDetailResponse create(QuizRequest quizRequest) {
         Quiz quiz = quizMapper.toEntity(quizRequest);
         Quiz newquiz = quizRepository.save(quiz);
         return quizMapper.toResponse(newquiz);
@@ -60,9 +61,22 @@ public class QuizServiceImp implements QuizzService {
     @Override
     public void addQuestionToQuizz(UUID quizzID, List<UUID> questions) {
         Quiz quiz = quizRepository.findByIdAndActiveTrue(quizzID).orElseThrow(() -> new EntityNotFoundException("Quizz not found"));
+        System.out.print("Log------1" + quiz);
         List<Question> questionList = questionRepository.findAllByIdInAndActiveTrue(questions);
-        quiz.setQuestions(questionList);
-        quizRepository.save(quiz);
+        System.out.print("Log------2 :" + questionList);
+        Set<UUID> existingIds = quiz.getQuestions()
+                .stream()
+                .map(Question::getId)
+                .collect(Collectors.toSet());
+        for (Question q : questionList) {
+            if (!existingIds.contains(q.getId())) {
+                quiz.getQuestions().add(q);
+                q.getQuizzes().add(quiz);
+            }
+        }
+        System.out.print("Log------3 :" + quiz);
+        questionRepository.saveAll(questionList);
+        System.out.print("Log------4 :" + "save");
     }
 
     @Override
@@ -70,18 +84,18 @@ public class QuizServiceImp implements QuizzService {
         Quiz quiz = quizRepository.findByIdAndActiveTrue(uuid).orElseThrow(() -> new EntityNotFoundException("Quiz not found"));
         quizMapper.updateEntity(quiz, quizRequest);
         Quiz newQuiz = quizRepository.save(quiz);
-        return quizMapper.toResponse(newQuiz);
+        return quizMapper.toQuizResponse(newQuiz);
     }
 
     @Override
     public Page<QuizResponse> getAll(Pageable pageable) {
         Page<Quiz> page = quizRepository.findAllByActiveTrue(pageable);
-        return page.map(quizMapper::toResponse);
+        return page.map(quizMapper::toQuizResponse);
     }
 
     @Override
     public QuizSubmitRespone submit(QuizSubmitRequest quizSubmitRequest) {
-        User user = userRepository.findById(quizSubmitRequest.userId())
+        User user = userRepository.findByIdAndActiveTrue(quizSubmitRequest.userId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", quizSubmitRequest.userId()));
 
         Quiz quiz = quizRepository.findByIdWithQuestionsAndAnswers(quizSubmitRequest.quizId())
@@ -91,7 +105,7 @@ public class QuizServiceImp implements QuizzService {
             throw new IllegalStateException("Quiz is not active");
         }
 
-        List<Question> quizQuestions = quiz.getQuestions();
+        Set<Question> quizQuestions = quiz.getQuestions();
 
         if (quizQuestions == null || quizQuestions.isEmpty()) {
             throw new IllegalStateException("Quiz has no questions");

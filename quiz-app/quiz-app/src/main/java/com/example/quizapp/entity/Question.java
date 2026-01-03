@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,13 +34,13 @@ public class Question extends BaseEntity {
             joinColumns = @JoinColumn(name = "question_id"),
             inverseJoinColumns = @JoinColumn(name = "quiz_id")
     )
-    private List<Quiz> quizzes;
+    private List<Quiz> quizzes = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "question",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Answer> answers;
+    private Set<Answer> answers = new HashSet<>();
 }
 

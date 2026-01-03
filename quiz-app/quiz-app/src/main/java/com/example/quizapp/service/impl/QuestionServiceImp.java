@@ -60,7 +60,11 @@ public class QuestionServiceImp implements QuestionService {
     public QuestionResponse update(UUID id, QuestionRequest request) {
         Question existing = questionRepository.findById(id).orElseThrow(() -> ResourceNotFoundException.questionNotFound(id));
         questionMapper.updateEntity(existing, request);
-
+        if(existing.getAnswers() != null){
+            existing.getAnswers().forEach(answer -> {
+                answer.setQuestion(existing);
+            });
+        }
         Question saved = questionRepository.save(existing);
         return questionMapper.toResponse(saved);
     }

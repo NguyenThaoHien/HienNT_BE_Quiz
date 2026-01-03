@@ -44,10 +44,10 @@ public class QuizzController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Forbidden - Requires USER or ADMIN role", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Quiz not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     })
-    public ResponseEntity<ApiResponse<QuizResponse>> createNewQuiz(
+    public ResponseEntity<ApiResponse<QuizDetailResponse>> createNewQuiz(
             @Valid @RequestBody QuizRequest request
     ) {
-        QuizResponse response = quizzService.create(request);
+        QuizDetailResponse response = quizzService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(response, "Quizz created successfully"));
     }
 

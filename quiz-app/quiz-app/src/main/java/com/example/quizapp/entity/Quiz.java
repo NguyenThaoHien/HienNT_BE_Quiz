@@ -6,7 +6,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "quizzes")
@@ -23,6 +26,6 @@ public class Quiz extends BaseEntity {
     private Integer durationMinutes;
 
     @ManyToMany(mappedBy = "quizzes")
-    private List<Question> questions;
+    private Set<Question> questions = new HashSet<>();
 }
 
